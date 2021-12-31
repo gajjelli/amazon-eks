@@ -13,6 +13,7 @@ This repository contains source code to provision an EKS cluster in AWS using Te
 
 ```
 ├── README.md
+├── deployer-policy.json
 ├── eks
 │   ├── cluster.tf
 │   ├── cluster_role.tf
@@ -27,9 +28,10 @@ This repository contains source code to provision an EKS cluster in AWS using Te
 │   ├── 1.ns-sa-sec.yaml
 │   ├── 2.wh-resources.yml
 │   ├── 3.lb-svc.yaml
-│   ├── RBACDeveloperPolicy.json
-│   ├── aws-auth-template.yaml
-│   └── rbac.yaml
+│   ├── 4.rbac.yaml
+│   └── aws-auth-template.yaml
+├── local-output-files
+│   └── pdb_policy_arn.txt
 ├── main.tf
 ├── provider.tf
 ├── variables.tf
@@ -107,4 +109,8 @@ To deploy a simple application to you cluster, redirect to the directory called 
 2. `kubectl apply -f k8s-manifests/2.wh-resources.yml`
 3. `kubectl apply -f k8s-manifests/3.lb-svc.yaml`
 4. `kubectl apply -f k8s-manifests/4.rbac.yaml`
-5. `kubectl apply -f k8s-manifests/1.ns-sa-sec.yaml`
+
+## find the role arn from local-output-files/role_arn.txt and update the 5.sa.yaml
+## eks.amazonaws.com/role-arn: arn:aws:iam::<ACCOUNT_ID>:role/<IAM_ROLE_NAME>
+
+5. `kubectl apply -f k8s-manifests/5.sa.yaml`
