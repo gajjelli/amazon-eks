@@ -110,7 +110,7 @@ To deploy a simple application to you cluster, redirect to the directory called 
 3. `kubectl apply -f k8s-manifests/3.lb-svc.yaml`
 4. `kubectl apply -f k8s-manifests/4.rbac.yaml`
 
-## find the role arn from local-output-files/role_arn.txt and update the 5.sa.yaml
-## eks.amazonaws.com/role-arn: arn:aws:iam::<ACCOUNT_ID>:role/<IAM_ROLE_NAME>
+find the role arn from ## role_arn.txt and update the  ## 5.sa.yaml
+eks.amazonaws.com/role-arn: arn:aws:iam::<ACCOUNT_ID>:role/<IAM_ROLE_NAME>
 
 5. `kubectl apply -f k8s-manifests/5.sa.yaml`
