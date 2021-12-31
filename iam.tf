@@ -22,7 +22,7 @@ resource "aws_iam_user_policy_attachment" "deployer_policy_attachment" {
 
 resource "local_file" "policyarn" {
     content     = "${aws_iam_policy.deployer_policy.arn}"
-    filename = "${path.module}/local-output-files/policy_arn.txt"
+    filename = "${path.module}/policy_arn.txt"
 }
 
 data "aws_iam_policy_document" "instance-assume-role-policy" {
@@ -50,5 +50,5 @@ resource "aws_iam_role" "ALBIngressControllerIAMPolicyRole" {
 
 resource "local_file" "rolearn" {
     content     = "${aws_iam_role.ALBIngressControllerIAMPolicyRole.arn}"
-    filename = "${path.module}/local-output-files/role_arn.txt"
+    filename = "${path.module}/role_arn.txt"
 }
