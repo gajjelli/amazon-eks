@@ -1,0 +1,99 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deploy-hpa
+  namespace: wh-ns
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+    #  maxSurge: 2
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      serviceAccountName: pdb
+      securityContext:
+        runAsNonRoot: true
+      containers:
+      - name: nginx
+        image: nginxinc/nginx-unprivileged
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: http-port
+          containerPort: 80
+        volumeMounts:
+          - mountPath: "/var/my-app"
+            name: api-key
+        env:
+        - name: API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: api-key
+              key: API_KEY
+      volumes:
+        - name: api-key
+          secret:
+            secretName: api-key # name of the Secret
+---
+apiVersion: policy/v1beta1
+kind: PodDisruptionBudget
+metadata:
+  name: pdb
+  namespace: wh-ns
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: nginx
+---
+#  minReplicas > minAvailable
+# minAvailable: XX defined in PodDisruptionBudget will have higher priority than minReplicas: XX defined in HPA.
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: hpa
+  namespace: wh-ns
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: deploy-hpa
+  minReplicas: 4
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 60
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: AverageValue
+        averageValue: 100Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc-wh
+  namespace: wh-ns
+  labels:
+    name: deploy-hpa
+spec:
+  type: NodePort
+  selector:
+    name: deploy-hpa
+  ports:
+  - port: 80
+    targetPort: 80
+    nodePort: 31231
+---

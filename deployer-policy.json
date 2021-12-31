@@ -1,0 +1,21 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                "eks:*",
+                "eks:DescribeNodegroup",
+                "eks:ListNodegroups",
+                "eks:ListClusters",
+                "eks:DescribeCluster",
+                "eks:AccessKubernetesApi",
+                "eks:ListUpdates",
+                "eks:ListFargateProfiles",
+                "ssm:GetParameter"
+            ],
+            "Resource": "*"
+        }
+    ]
+}

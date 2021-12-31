@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: wh-ns
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: wh-pol
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::<ACCOUNT_ID>:role/<IAM_ROLE_NAME>
+  name: pdb
+  namespace: wh-ns
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: api-key
+  namespace: wh-ns
+type: Opaque
+data:
+  API_KEY: d2lsbGlhbWhpbGw=
